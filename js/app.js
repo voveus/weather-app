@@ -1,19 +1,16 @@
-let currentScale = "M";
-let currentPeriod = "1";
-const API_URL = "https://api.weatherbit.io/v2.0/forecast/daily"
-const API_KEY = "e9e78010e9a848668b42b57bbc099bca"
+let params = {
+        units: "M",
+        days: "1",
+        city: ""
+    }
 
 function getForecast () {
-    const text = document.getElementById('search');    
-    getData(text.value);
+    const text = document.getElementById('search');
+    params.city = text.value;
+    let cityWeather = new WeatherApi();
+    cityWeather.getDailyForecast(params)
+        .then(data => displayForecast(data));
 }
-
-async function getData(query) {
-    const response = await fetch(`${API_URL}?city=${query}&days=${currentPeriod}&units=${currentScale}&key=${API_KEY}`);
-    const data = await response.json();
-    console.log(data);  
-    displayForecast(data)
-    } 
 
 function removeChilds () {
     const mainForecast = document.getElementById('mainForecast');
@@ -108,11 +105,11 @@ function onKeyPress (event) {
 }
 
 function toggleScale (scale) {
-    currentScale = scale;
+    params.units = scale;
     getForecast();
 }
 
 function togglePeriod () {
-    currentPeriod = document.querySelector(".forecastPeriod").value;
+    params.days = document.querySelector(".forecastPeriod").value;
     getForecast();
 }
