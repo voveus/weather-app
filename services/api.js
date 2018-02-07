@@ -6,15 +6,15 @@ class WeatherApi {
   constructor(){}
 
   getCurrentWeather(params) {
-    return this.sendRequest(this.buildUrl('/current', params));
+    return this.sendRequest(this.buildUrl('current', params));
   }
 
   get3HourlyForecast(params) {
-    return this.sendRequest(this.buildUrl('/forecast/3hourly', params));
+    return this.sendRequest(this.buildUrl('forecast/3hourly', params));
   }
 
   getDailyForecast(params) {
-    return this.sendRequest(this.buildUrl('/forecast/daily', params));
+    return this.sendRequest(this.buildUrl('forecast/daily', params));
   }
 
   sendRequest(url) {
