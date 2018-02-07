@@ -24,9 +24,9 @@
 
         <div class="forecastDetails">
             <div class="scale-container"> 
-                <input type="radio" name="toggleScale" id="C" value="metric" class="input-hide" checked></input>
+                <input type="radio" name="toggleScale" onclick="toggleScale('metric')"id="C" value="metric" class="input-hide" checked></input>
                 <label for="C">°C</label> 
-                <input type="radio" name="toggleScale" id="F" value="imperial" class="input-hide"></input>            
+                <input type="radio" name="toggleScale" onclick="toggleScale('imperial')" id="F" value="imperial" class="input-hide"></input>            
                 <label for="F">°F</label> 
             </div>
 
