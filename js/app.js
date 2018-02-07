@@ -1,21 +1,16 @@
-let currentScale = "metric";
-let currentPeriod = "1";
+let params = {
+        units: "M",
+        days: "1",
+        city: ""
+    }
 
 function getForecast () {
-    const text = document.getElementById('search');    
-    getData(text.value);
+    const text = document.getElementById('search');
+    params.city = text.value;
+    let cityWeather = new WeatherApi();
+    cityWeather.getDailyForecast(params)
+        .then(data => displayForecast(data));
 }
-
-function getData(query) {
-     fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${query}&units=${currentScale}&cnt=${currentPeriod}&APPID=6d6fe420a0e525a75dacad47d8c7f5d6`)
-        .then((response) => {
-           return response.json()
-        })
-        .then((data) => {
-            removeChilds();
-            displayForecast(data);            
-        });   
-    } 
 
 function removeChilds () {
     const mainForecast = document.getElementById('mainForecast');
@@ -27,7 +22,7 @@ function removeChilds () {
 function displayForecast (data) {
     const mainForecast = document.getElementById('mainForecast');
 
-    data.list.forEach((day) => {
+    data.data.forEach((day) => {
         const mainForecastItem = document.createElement('div');
         mainForecast.appendChild(mainForecastItem);
         mainForecastItem.className= 'mainForecastItem'
@@ -45,11 +40,11 @@ function generateSummary (data) {
     summary.className  = 'summary';
 
     const weatherIcon = document.createElement('img');
-    weatherIcon.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+    weatherIcon.src = `img/icons/${data.weather.icon}.png`;
     summary.appendChild(weatherIcon);
 
     const avrTemperature = document.createElement('div');
-    avrTemperature.innerText = Math.round(data.main.temp) + "°";
+    avrTemperature.innerText = Math.round(data.temp) + "°";
     summary.appendChild(avrTemperature);
     avrTemperature.className  = 'avrTemperature';
 
@@ -61,7 +56,7 @@ function generateSummary (data) {
     const minTemperatureHeader = document.createElement('span');1
     const minTemperatureData = document.createElement('span');
     minTemperatureHeader.innerText = "min: ";
-    minTemperatureData.innerText = Math.round(data.main["temp_min"]) + "°";
+    minTemperatureData.innerText = Math.round(data.min_temp) + "°";
     minTemperature.appendChild(minTemperatureHeader);
     minTemperature.appendChild(minTemperatureData);
     temperature.appendChild(minTemperature);
@@ -70,13 +65,13 @@ function generateSummary (data) {
     const maxTemperatureHeader = document.createElement('span');
     const maxTemperatureData = document.createElement('span');
     maxTemperatureHeader.innerText = "max: ";
-    maxTemperatureData.innerText = Math.round(data.main["temp_max"]) + "°";
+    maxTemperatureData.innerText = Math.round(data.max_temp) + "°";
     maxTemperature.appendChild(maxTemperatureHeader);
     maxTemperature.appendChild(maxTemperatureData);
     temperature.appendChild(maxTemperature);
 
     const description = document.createElement('h4');
-    description.innerText = data.weather[0].description;
+    description.innerText = data.weather.description;
     summary.appendChild(description); 
     description.className  = 'description';
     return summary;
@@ -87,15 +82,15 @@ function generateDetails (data) {
     details.className  = 'details'; 
     
     const pressure = document.createElement('div');
-    pressure.innerText = data.main.pressure + " Pa";
+    pressure.innerText = data.pres + " Pa";
     details.appendChild(pressure);
 
     const humidity = document.createElement('div');
-    humidity.innerText = data.main.humidity + "%";
+    humidity.innerText = data.pop + "%";
     details.appendChild(humidity);
     
     const windSpeed = document.createElement('div');
-    windSpeed.innerText = data.wind.speed + " m/s";
+    windSpeed.innerText = data.wind_spd + " m/s";
     details.appendChild(windSpeed);  
 
     return details;
@@ -110,11 +105,11 @@ function onKeyPress (event) {
 }
 
 function toggleScale (scale) {
-    currentScale = scale;
+    params.units = scale;
     getForecast();
 }
 
 function togglePeriod () {
-    currentPeriod = document.querySelector(".forecastPeriod").value;
+    params.days = document.querySelector(".forecastPeriod").value;
     getForecast();
 }

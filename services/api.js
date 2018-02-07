@@ -1,34 +1,31 @@
 const API_KEY = '02fd99f29107456e914006fff00a5b9c'; // Weatherbit API key
+const API_URL = 'https://api.weatherbit.io/v2.0';
 
-//for current weather
-const urlCurrent = (city = 'Kiev') =>
-  `https://api.weatherbit.io/v2.0/current?city=${city}&key=${API_KEY}`;
+class WeatherApi {
 
-//for 3 hourly on 5 days
-const urlDays = (city = 'Kiev', days = 5) =>
-  `https://api.weatherbit.io/v2.0/forecast/3hourly?city=${city}&days=${days}&key=${API_KEY}`;
+  constructor(){}
 
-//for daily to 7 days
-const urlWeek = (city = 'Kiev', days = 7) =>
-  `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&days=${days}&key=${API_KEY}`;
+  getCurrentWeather(params) {
+    return this.sendRequest(this.buildUrl('current', params));
+  }
 
-export const getForecast = city => {
-  fetch(urlCurrent(city))
-    .then(res => res.json())
-    .then(data => console.log('parsed json', data))
-    .catch(er => console.log('parsing failed', er));
-};
+  get3HourlyForecast(params) {
+    return this.sendRequest(this.buildUrl('forecast/3hourly', params));
+  }
 
-export const getDailyForecast = (city, days) => {
-  fetch(urlDays(city, days))
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(er => console.log(er));
-};
+  getDailyForecast(params) {
+    return this.sendRequest(this.buildUrl('forecast/daily', params));
+  }
 
-export const getWeeklyForecast = (city, days) => {
-  fetch(urlWeek(city, days))
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(er => console.log(er));
-};
+  sendRequest(url) {
+    return fetch(url)
+      .then(res => res.json());
+  }
+
+  buildUrl(method, params) {
+    const getParams = Object.entries(params)
+      .map(([key, value]) => (`${key}=${value}`))
+      .join('&');
+    return `${API_URL}/${method}?${getParams}&key=${API_KEY}`;
+  }
+}
