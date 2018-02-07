@@ -21,6 +21,7 @@ body {
   color: #959090;
   font-family: 'Josefin Sans', sans-serif;
   font-size: 1em;  
+  outline: none;
   text-align: center;
   border: 2px groove #111111;
   -webkit-box-shadow: #000 1px 1px 10px inset;
@@ -82,6 +83,7 @@ body {
   font-family: 'Josefin Sans', sans-serif;  
   font-size: 1em;
   margin-left: auto;
+  outline: none;
   border: 2px groove #111111;
    -webkit-box-shadow: #000 1px 1px 10px inset;
   box-shadow: #000 1px 1px 10px inset;
