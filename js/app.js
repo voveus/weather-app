@@ -40,7 +40,7 @@ function generateSummary (data) {
     summary.className  = 'summary';
 
     const weatherIcon = document.createElement('img');
-    weatherIcon.src = `../img/icon/${data.weather.icon}.png`;
+    weatherIcon.src = `img/icons/${data.weather.icon}.png`;
     summary.appendChild(weatherIcon);
 
     const avrTemperature = document.createElement('div');
