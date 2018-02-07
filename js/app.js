@@ -15,6 +15,12 @@ async function getData(query) {
     displayForecast(data)
     } 
 
+function removeChilds () {
+    const mainForecast = document.getElementById('mainForecast');
+    while (mainForecast.firstChild) {
+        mainForecast.removeChild(mainForecast.firstChild);
+    }
+}
 
 function displayForecast (data) {
     const mainForecast = document.getElementById('mainForecast');
