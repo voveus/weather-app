@@ -14,21 +14,25 @@ function init() {
 
 async function makeForecast(forecastPeriod, scale) {
     if (storageAvailable('localStorage')) {
-        var storageData = JSON.parse(localStorage.getItem(params.city));
+        var storageData = extractFromStorage(params.city);
+        storageData = JSON.parse(storageData);
 
         if ((storageData !== null) && checkDataExpire(storageData)) {
             localStorage.clear();
             storageData == null;
         }
         if (storageData === null) {
-            await getForecast().then(data => populateStorage(data));
-            storageData = JSON.parse(localStorage.getItem(params.city));
+            await getForecast()
+                .then(jsonData => JSON.stringify(jsonData))
+                .then(data => populateStorage(params.city, data));
+            storageData = extractFromStorage(params.city);
+            storageData = JSON.parse(storageData);
         }
-
+        
         displayForecast(storageData, forecastPeriod, scale);
 
     } else {
-        getForecast().then(data => displayForecast (data, forecastPeriod, scale));
+        getForecast().then(data => displayForecast(data, forecastPeriod, scale));
     }
 }
 
@@ -56,9 +60,12 @@ function getForecast() {
         .then(data => data);
 }
 
-function populateStorage(apiDataObj) {
-    var serialObj = JSON.stringify(apiDataObj);
-    localStorage.setItem(params.city, serialObj);
+function populateStorage(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function extractFromStorage(key) {
+    return localStorage.getItem(key);
 }
 
 function checkDataExpire(storageData) {
