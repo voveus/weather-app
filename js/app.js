@@ -20,6 +20,8 @@ function removeChilds () {
 }
 
 function displayForecast (data) {
+    removeChilds();
+
     const mainForecast = document.getElementById('mainForecast');
 
     data.data.forEach((day) => {
