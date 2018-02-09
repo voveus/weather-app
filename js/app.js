@@ -1,16 +1,87 @@
 let params = {
         units: "M",
-        days: "1",
+        days: "16",
         city: ""
     }
 
-function getForecast () {
+function init() {
     const text = document.getElementById('search');
-    params.city = text.value;
-    let cityWeather = new WeatherApi();
-    cityWeather.getDailyForecast(params)
-        .then(data => displayForecast(data));
+    params.city = text.value.toLowerCase();
+    const forecastPeriod = document.querySelector(".forecastPeriod").value;
+    const scale = document.querySelector('input[name="toggleScale"]:checked').value;
+    makeForecast(forecastPeriod, scale);
 }
+
+async function makeForecast(forecastPeriod, scale) {
+    if (storageAvailable('localStorage')) {
+        var storageData = extractFromStorage(params.city);
+        storageData = JSON.parse(storageData);
+
+        if ((storageData !== null) && checkDataExpire(storageData)) {
+            localStorage.clear();
+            storageData == null;
+        }
+        if (storageData === null) {
+            await getForecast()
+                .then(jsonData => JSON.stringify(jsonData))
+                .then(data => populateStorage(params.city, data));
+            storageData = extractFromStorage(params.city);
+            storageData = JSON.parse(storageData);
+        }
+        
+        displayForecast(storageData, forecastPeriod, scale);
+
+    } else {
+        getForecast().then(data => displayForecast(data, forecastPeriod, scale));
+    }
+}
+
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            e.code === 22 ||
+            e.code === 1014 ||
+            e.name === 'QuotaExceededError' ||
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            storage.length !== 0;
+    }
+}
+
+function getForecast() {
+    let cityWeather = new WeatherApi();
+    return cityWeather.getDailyForecast(params)
+        .then(data => data);
+}
+
+function populateStorage(key, value) {
+    localStorage.setItem(key, value);
+}
+
+function extractFromStorage(key) {
+    return localStorage.getItem(key);
+}
+
+function checkDataExpire(storageData) {
+    let storageTimeStamp = storageData.data[0].ts * 1000;
+    let storageDate = new Date(storageTimeStamp);
+    let storageHour = storageDate.getHours();
+    let storageExpires = storageTimeStamp + ((24 - storageHour) * 60 * 60 * 1000);
+    let currentTimeStamp = Date.now();
+
+    if (currentTimeStamp > storageExpires) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 function removeChilds () {
     const mainForecast = document.getElementById('mainForecast');
@@ -19,25 +90,31 @@ function removeChilds () {
     }
 }
 
-function displayForecast (data) {
+function displayForecast (cityData, forecastPeriod, scale) {
     removeChilds();
 
     const mainForecast = document.getElementById('mainForecast');
 
-    data.data.forEach((day) => {
+    cityData.data.every((day, index) => {
+        if (index >= forecastPeriod) {return false}
+            else {
         const mainForecastItem = document.createElement('div');
         mainForecast.appendChild(mainForecastItem);
         mainForecastItem.className= 'mainForecastItem'
         
-        const summary = generateSummary(day);
+        const summary = generateSummary(day, scale);
         mainForecastItem.appendChild(summary);
 
         const details = generateDetails(day);
         mainForecastItem.appendChild(details);
+
+        return true;
+
+    }
     });
 }
 
-function generateSummary (data) {
+function generateSummary (data, scale) {
     const summary = document.createElement('div');
     summary.className  = 'summary';
 
@@ -46,7 +123,7 @@ function generateSummary (data) {
     summary.appendChild(weatherIcon);
 
     const avrTemperature = document.createElement('div');
-    avrTemperature.innerText = Math.round(data.temp) + "°";
+    avrTemperature.innerText = ((scale == "M") ? Math.round(data.temp) : Math.round(toFahrenheit(data.temp))) + "°";
     summary.appendChild(avrTemperature);
     avrTemperature.className  = 'avrTemperature';
 
@@ -58,7 +135,7 @@ function generateSummary (data) {
     const minTemperatureHeader = document.createElement('span');1
     const minTemperatureData = document.createElement('span');
     minTemperatureHeader.innerText = "min: ";
-    minTemperatureData.innerText = Math.round(data.min_temp) + "°";
+    minTemperatureData.innerText = ((scale == "M") ? Math.round(data.min_temp) : Math.round(toFahrenheit(data.min_temp))) + "°";
     minTemperature.appendChild(minTemperatureHeader);
     minTemperature.appendChild(minTemperatureData);
     temperature.appendChild(minTemperature);
@@ -67,7 +144,7 @@ function generateSummary (data) {
     const maxTemperatureHeader = document.createElement('span');
     const maxTemperatureData = document.createElement('span');
     maxTemperatureHeader.innerText = "max: ";
-    maxTemperatureData.innerText = Math.round(data.max_temp) + "°";
+    maxTemperatureData.innerText = ((scale == "M") ? Math.round(data.max_temp) : Math.round(toFahrenheit(data.max_temp))) + "°";
     maxTemperature.appendChild(maxTemperatureHeader);
     maxTemperature.appendChild(maxTemperatureData);
     temperature.appendChild(maxTemperature);
@@ -98,20 +175,22 @@ function generateDetails (data) {
     return details;
 }
 
+function toFahrenheit(temperature) {
+    return temperature * 1.8 + 32;
+}
+
 function onKeyPress (event) {  
     if (event.which == 13 || event.keyCode == 13) {
-        getForecast();
+        init();
         return false;
     }
     return true;
 }
 
-function toggleScale (scale) {
-    params.units = scale;
-    getForecast();
+function toggleScale() {
+    init();
 }
 
-function togglePeriod () {
-    params.days = document.querySelector(".forecastPeriod").value;
-    getForecast();
+function togglePeriod() {
+    init();
 }
