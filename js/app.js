@@ -69,7 +69,7 @@ function extractFromStorage(key) {
 }
 
 function checkDataExpire(storageData) {
-    let storageTimeStamp = (storageData.data[0].ts + "000") * 1;
+    let storageTimeStamp = storageData.data[0].ts * 1000;
     let storageDate = new Date(storageTimeStamp);
     let storageHour = storageDate.getHours();
     let storageExpires = storageTimeStamp + ((24 - storageHour) * 60 * 60 * 1000);
