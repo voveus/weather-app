@@ -41,6 +41,8 @@ body {
   border-bottom: 1px dotted #959090;
   font-family: 'Josefin Sans', sans-serif;  
   cursor: pointer;
+  text-decoration: none;
+  color: #858484;
 }
 .forecastDetails{  
   display: -webkit-box;
