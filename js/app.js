@@ -1,10 +1,18 @@
-import WeatherApi from './services/api';
+import WeatherApi from './services/api.js';
 
 let params = {
 	units: 'M',
 	days: '1',
 	city: ''
 };
+const searchField = document.getElementById('search');
+searchField.onkeypress = onKeyPress;
+const celius = document.getElementById('C');
+celius.onclick = toggleScale.bind(null,'M');
+const farenheit = document.getElementById('F');
+farenheit.onclick = toggleScale.bind(null,'I');
+const forecastPeriod = document.querySelector('.forecastPeriod');
+forecastPeriod.onclick = togglePeriod;
 
 function getForecast () {
 	const text = document.getElementById('search');
@@ -100,7 +108,7 @@ function generateDetails (data) {
 	return details;
 }
 
-function onKeyPress (event) {  // eslint-disable-line
+function onKeyPress (event) { 
 	if (event.which === 13 || event.keyCode === 13) {
 		getForecast();
 		return false;
@@ -108,12 +116,12 @@ function onKeyPress (event) {  // eslint-disable-line
 	return true;
 }
 
-function toggleScale (scale) { // eslint-disable-line
+function toggleScale (scale) { 
 	params.units = scale;
 	getForecast();
 }
 
-function togglePeriod () { // eslint-disable-line
+function togglePeriod () { 
 	params.days = document.querySelector('.forecastPeriod').value;
 	getForecast();
 }

@@ -4,8 +4,6 @@
   "description": "weather app for kottans frontend course",
   "main": "app.js",
   "scripts": {
-    "build": "babel app -d dist --preset es2015",
-    "watch": "babel app -d dist --preset es2015 -w",
     "lint": "eslint --fix .",
     "start": "webpack-dev-server"
   },
@@ -14,17 +12,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zubrik1/weather-app.git"
+    "url": "https://github.com/voveus/weather-app"
   },
-  "author": "zubrik1",
+  "author": "kottans2018",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/zubrik1/weather-app/issues"
+    "url": "https://github.com/voveus/weather-app/issues"
   },
-  "homepage": "https://github.com/zubrik1/weather-app#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "eslint": "^4.17.0",
     "eslint-config-airbnb-base": "^12.1.0",
