@@ -7,9 +7,6 @@
     "lint": "eslint --fix .",
     "start": "webpack-dev-server"
   },
-  "ghooks": {
-    "pre-commit": "npm run lint-staged"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/voveus/weather-app"
@@ -34,5 +31,13 @@
     "lint-staged": "^6.1.0",
     "style-loader": "^0.20.1",
     "webpack-dev-server": "^2.11.1"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --quiet"
   }
 }
