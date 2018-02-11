@@ -13,6 +13,12 @@ module.exports = {
 	module: {
 		rules: [
 			{
+				enforce: 'pre',
+				test: /\.js$/,
+				exclude: /node_modules/,
+				loader: 'eslint-loader'
+			},
+			{
 				test: /\.js$/,
 				exclude: /node_modules/,
 				use: {
@@ -21,6 +27,19 @@ module.exports = {
 						presets: [ 'env' ]
 					}
 				}
+			},
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					'css-loader'
+				]
+			},
+			{
+				test: /\.(png|svg|jpg|jpeg)$/,
+				use: [
+					'file-loader'
+				]
 			}
 		]
 	}

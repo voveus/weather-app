@@ -1,4 +1,6 @@
 import WeatherApi from './services/api.js';
+import '../css/normalize.css';
+import '../css/main.css';
 
 let params = {
 	units: 'M',
