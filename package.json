@@ -30,6 +30,7 @@
     "ghooks": "^2.0.2",
     "lint-staged": "^6.1.0",
     "style-loader": "^0.20.1",
+    "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"
   },
   "config": {
