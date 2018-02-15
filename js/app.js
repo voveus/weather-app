@@ -7,6 +7,7 @@ let params = {
 	days: '1',
 	city: ''
 };
+
 const searchField = document.getElementById('search');
 searchField.onkeypress = onKeyPress;
 const celius = document.getElementById('C');
@@ -14,14 +15,45 @@ celius.onclick = toggleScale.bind(null,'M');
 const farenheit = document.getElementById('F');
 farenheit.onclick = toggleScale.bind(null,'I');
 const forecastPeriod = document.querySelector('.forecastPeriod');
-forecastPeriod.onclick = togglePeriod;
+forecastPeriod.onchange = togglePeriod;
 
 function getForecast () {
 	const text = document.getElementById('search');
 	params.city = text.value;
 	let cityWeather = new WeatherApi();
 	cityWeather.getDailyForecast(params)
-		.then(data => displayForecast(data));
+		.then(data => {
+			displayForecast(data);
+			addRecentCity(data);
+		});
+}
+
+function addRecentCity(data){
+	let forecast = JSON.stringify(data);	
+	localStorage[`${params.city}`] = `${forecast}`;
+	const recentCitiesBlock = document.querySelector('.recentCities');
+	const cities = recentCitiesBlock.children;
+	for (let i = 0; i < cities.length; i++) {
+		if (cities[i].innerText.toLowerCase() === params.city.toLowerCase()) {
+			return;
+		} 
+	}
+	if(cities.length>=5) {
+		for(let i = 0; i < cities.length - 1; i++){
+			cities[i].innerText = cities[i+1].innerText;
+		}
+		cities[cities.length - 1].innerText = params.city;
+		return;
+	}
+	const recentCity = document.createElement('a');
+	recentCitiesBlock.appendChild(recentCity);
+	recentCity.innerText = `${params.city}`;
+	recentCity.className = 'recentItem';
+	recentCity.onclick = (event) => {
+		let cityData = JSON.parse(localStorage.getItem(event.target.innerText));
+		displayForecast(cityData);
+		
+	};
 }
 
 function removeChilds () {
@@ -35,7 +67,7 @@ function displayForecast (data) {
 	removeChilds();
 
 	const mainForecast = document.getElementById('mainForecast');
-
+	
 	data.data.forEach((day) => {
 		const mainForecastItem = document.createElement('div');
 		mainForecast.appendChild(mainForecastItem);
@@ -113,8 +145,9 @@ function generateDetails (data) {
 function onKeyPress (event) { 
 	if (event.which === 13 || event.keyCode === 13) {
 		getForecast();
+		event.target.value = '';
 		return false;
-	}
+	}	
 	return true;
 }
 

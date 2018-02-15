@@ -1,4 +1,4 @@
-const API_KEY = '02fd99f29107456e914006fff00a5b9c'; // Weatherbit API key
+const API_KEY = 'e9e78010e9a848668b42b57bbc099bca'; // Weatherbit API key
 const API_URL = 'https://api.weatherbit.io/v2.0';
 
 export default class WeatherApi {
