@@ -1,0 +1,21 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "commonjs": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2017
+    },
+    "rules": {
+        "indent": ["error", "tab"],
+        "eqeqeq": ["error", "smart"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "no-console": 0,
+        "no-empty-pattern": 0,
+        "eol-last": ["error", "always"]
+    }
+}

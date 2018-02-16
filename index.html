@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Weather app</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
 </head>
 
@@ -14,23 +12,19 @@
     <section class="mainSearch">
         <div class="logo">Batman's Weather App</div>
         <input type="text" id="search"  class = "search-field" autofocus
-            placeholder="Enter the city that needs a hero... or forecast"
-            onkeypress="onKeyPress(event)"/>
+            placeholder="Enter the city that needs a hero... or forecast"/>
 
-        <div class="recentCities">
-            <div class="recentItem">Kiev</div>
-            <div class="recentItem">Odessa</div>
-        </div>
+        <div class="recentCities"></div>
 
         <div class="forecastDetails">
             <div class="scale-container"> 
-                <input type="radio" name="toggleScale" onclick="toggleScale('M')"id="C" value="metric" class="input-hide" checked></input>
+                <input type="radio" name="toggleScale" id="C" value="metric" class="input-hide" checked></input>
                 <label for="C">°C</label> 
-                <input type="radio" name="toggleScale" onclick="toggleScale('I')" id="F" value="imperial" class="input-hide"></input>            
+                <input type="radio" name="toggleScale" id="F" value="imperial" class="input-hide"></input>            
                 <label for="F">°F</label> 
             </div>
 
-            <select name="forecastPeriod" class="forecastPeriod" onchange="togglePeriod()">
+            <select name="forecastPeriod" class="forecastPeriod">
                 <option value="1">1 day</option>
                 <option value="3">3 days</option>
                 <option value="7">7 days</option>
@@ -41,6 +35,5 @@
 
     <section class="mainForecast" id="mainForecast"></section>
 </body>
-<script src="services/api.js"></script>
-<script src="js/app.js"></script>
+<script src="build.js"></script>
 </html>
